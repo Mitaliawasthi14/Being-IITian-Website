@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meet the Mentors</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #00f7e0;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      padding: 0 5vw;
+    }
+
+    .text-section {
+      width: 35%;
+      color: #fff;
+    }
+
+    .text-section h1 {
+      font-size: 2.5rem;
+      color: #00f7e0;
+    }
+
+    .text-section p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: #ccc;
+    }
+
+    .circle-container {
+      width: 55%;
+      position: relative;
+    }
+
+    .mentor-circle {
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      position: relative;
+      margin: 0 auto;
+      background-color: #191919;
+    }
+
+    .mentor {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #00f7e0;
+      overflow: hidden;
+      position: absolute;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .mentor img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mentor:hover {
+      transform: scale(1.75);
+      z-index: 2;
+    }
+
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #00f7e0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      transition: opacity 0.3s ease;
+    }
+
+    .center-text img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .mentor-name {
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .mentor-detail {
+      color: #ccc;
+      margin: 5px 0 0;
+    }
+
+    .mentor-subdetail {
+      font-size: 0.9rem;
+      color: #999;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="text-section">
+    <h1>Being IITian</h1>
+    <p>Being IITian is a journey, not a result.</p>
+  </div>
+
+  <div class="circle-container">
+    <div class="mentor-circle" id="mentorCircle">
+      <div class="center-text" id="centerText">
+        <h2 id="defaultText">Meet the Mentors</h2>
+        <div id="hoverContent" style="display: none;">
+          <img id="mentorImg" src="" alt="Mentor" />
+          <p class="mentor-name" id="mentorName"></p>
+          <p class="mentor-detail" id="mentorDetail"></p>
+          <p class="mentor-subdetail" id="mentorSubdetail"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const mentors = [
+      { name: "Palak Thakkar", img: "assets/palak.jpg", detail: "IIT Guwahati", subdetail: "Loves Quantum Physics" },
+      { name: "Riya Joshi", img: "assets/riya.jpg", detail: "IIT Bombay", subdetail: "CS Enthusiast & Dancer" },
+      { name: "Mitali Awasthi", img: "assets/mitali.jpg", detail: "IIT Patna", subdetail: "JEE Rank under 500" },
+      { name: "Sanya Bansal", img: "assets/mitali.jpg", detail: "IIT Kanpur", subdetail: "UI/UX Designer at heart" },
+      { name: "Rajat Yadav", img: "assets/riya.jpg", detail: "IIT Delhi", subdetail: "AIR 123, Passionate Mentor" },
+      { name: "Aarav Mehra", img: "assets/palak.jpg", detail: "IIT KGP", subdetail: "Sports + Science = ❤️" },
+      { name: "Manas Gupta", img: "assets/mitali.jpg", detail: "IIT Roorkee", subdetail: "Olympiad Medalist" },
+      { name: "Nisha Jain", img: "assets/riya.jpg", detail: "IIT Madras", subdetail: "Topper & Bookworm" },
+      { name: "Dev Sharma", img: "assets/palak.jpg", detail: "IIT Hyderabad", subdetail: "Tech Blogger & Builder" },
+      { name: "Tanya Goel", img: "assets/mitali.jpg", detail: "IIT BHU", subdetail: "Chemistry Lover" },
+      { name: "Abhinav", img: "assets/palak.jpg", detail: "IIT Jodhpur", subdetail: "AIR 287, Math Geek" },
+      { name: "Rohit Das", img: "assets/riya.jpg", detail: "IIT Gandhinagar", subdetail: "Loves teaching juniors" },
+      { name: "Neha Sharma", img: "assets/mitali.jpg", detail: "IIT Ropar", subdetail: "Mindset + Strategy Mentor" },
+      { name: "Ananya", img: "assets/riya.jpg", detail: "IIT Mandi", subdetail: "Anime & Algorithms" },
+      { name: "Aryan Kumar", img: "assets/palak.jpg", detail: "IIT Indore", subdetail: "AIR 456, Real Talk Only" },
+      { name: "Kriti Sinha", img: "assets/mitali.jpg", detail: "IIT Goa", subdetail: "Designs + Physics Combo" },
+    ];
+
+    const circle = document.getElementById("mentorCircle");
+    const centerText = document.getElementById("centerText");
+    const defaultText = document.getElementById("defaultText");
+    const hoverContent = document.getElementById("hoverContent");
+    const infoImg = document.getElementById("mentorImg");
+    const infoName = document.getElementById("mentorName");
+    const infoDetail = document.getElementById("mentorDetail");
+    const infoSubdetail = document.getElementById("mentorSubdetail");
+
+    const radius = 270;
+    const centerX = 300;
+    const centerY = 300;
+
+    mentors.forEach((mentor, i) => {
+      const angle = (i / mentors.length) * 2 * Math.PI;
+      const x = centerX + radius * Math.cos(angle) - 50;
+      const y = centerY + radius * Math.sin(angle) - 50;
+
+      const div = document.createElement("div");
+      div.classList.add("mentor");
+      div.style.left = `${x}px`;
+      div.style.top = `${y}px`;
+
+      const img = document.createElement("img");
+      img.src = mentor.img;
+      div.appendChild(img);
+
+      div.addEventListener("mouseover", () => {
+        defaultText.style.display = "none";
+        hoverContent.style.display = "block";
+        infoImg.src = mentor.img;
+        infoName.textContent = mentor.name;
+        infoDetail.textContent = mentor.detail;
+        infoSubdetail.textContent = mentor.subdetail;
+      });
+
+      div.addEventListener("mouseout", () => {
+        defaultText.style.display = "block";
+        hoverContent.style.display = "none";
+      });
+
+      circle.appendChild(div);
+    });
+  </script>
+</body>
+</html>
