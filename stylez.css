@@ -985,3 +985,12 @@ footer{padding:20px;text-align:center;background:var(--card-bg);color:#666;font-
     grid-template-columns: repeat(4, 1fr);
   }
 }
+.calendar-month-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 10px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
