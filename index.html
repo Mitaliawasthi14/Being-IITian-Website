@@ -116,6 +116,16 @@
 
 </section>
 
+  <section id="calendar" class="calendar-month-section">
+  <div class="calendar-header">
+    <button onclick="changeMonth(-1)" class="calendar-nav">&#8592;</button>
+    <h2 id="monthLabel">Loading...</h2>
+    <button onclick="changeMonth(1)" class="calendar-nav">&#8594;</button>
+  </div>
+
+  <div class="calendar-month-grid" id="calendarGrid"></div>
+</section>
+
 <!-- HTML: Premium Scrollable Core Team Section -->
 <section class="premium-team">
   <div class="left-text">
@@ -424,7 +434,92 @@
   // Start when DOM is ready
   window.addEventListener('load', startAutoScroll);
 </script>
+<script>
+  window.onload = function () {
+    const grid = document.getElementById("calendarGrid");
+    const monthLabel = document.getElementById("monthLabel");
+    let current = new Date();
 
+    function buildCalendar(date) {
+      grid.innerHTML = "";
+
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const startDay = (firstDay.getDay() + 6) % 7; // Monday = 0
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      weekdays.forEach(day => {
+        const header = document.createElement("div");
+        header.className = "calendar-day-box";
+        header.style.fontWeight = "bold";
+        header.innerText = day;
+        grid.appendChild(header);
+      });
+
+      for (let i = 0; i < startDay; i++) {
+        const empty = document.createElement("div");
+        empty.className = "calendar-day-box";
+        empty.innerHTML = "&nbsp;";
+        grid.appendChild(empty);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+       const box = document.createElement("div");
+box.className = "calendar-day-box";
+box.setAttribute("data-date", `${year}-${(month + 1).toString().padStart(2, "0")}-${d.toString().padStart(2, "0")}`);
+
+// 🖱 Click to add note
+box.addEventListener("click", () => {
+  const key = box.getAttribute("data-date");
+  const existing = localStorage.getItem(key) || "";
+  const input = prompt(`Add your personal event for ${key}:`, existing);
+  if (input !== null) {
+    localStorage.setItem(key, input);
+    buildCalendar(current);
+  }
+});
+// 📌 Load personal note
+const key = `${year}-${(month + 1).toString().padStart(2, "0")}-${d.toString().padStart(2, "0")}`;
+const note = localStorage.getItem(key);
+if (note) {
+  const custom = document.createElement("div");
+  custom.className = "event";
+  custom.innerHTML = `🧠 ${note}`;
+  box.appendChild(custom);
+}
+
+        const day = document.createElement("div");
+        day.className = "date";
+        day.innerText = d;
+        box.appendChild(day);
+
+        const tempDate = new Date(year, month, d);
+        if (tempDate.getDay() === 3) {
+          const event = document.createElement("div");
+          event.className = "event";
+          event.innerHTML = "📝 Weekly Test";
+          box.appendChild(event);
+        }
+
+        grid.appendChild(box);
+      }
+
+      monthLabel.innerText = date.toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      });
+    }
+
+    window.changeMonth = function (offset) {
+      current.setMonth(current.getMonth() + offset);
+      buildCalendar(current);
+    }
+
+    buildCalendar(current);
+  };
+</script>
 
 </body>
 </html>
